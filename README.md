@@ -111,6 +111,8 @@ for i, (column, title) in enumerate(dict_column.items()):
 plt.show()
 ```
 
+![](result/n1_1_1.png)
+
 ```
 df_plot = df_DA_US['company_name'].value_counts().head(10).to_frame()
 
@@ -122,6 +124,9 @@ plt.xlabel('Number of Jobs')
 plt.ylabel('')
 plt.show()
 ```
+
+![](result/n1_1_2.png)
+
 
 ### Key Findings
 
@@ -200,6 +205,9 @@ fig.tight_layout(h_pad=.8)
 plt.show()
 ```
 
+![](result/n2_1.png)
+
+
 ### Key Findings
 
 * Data Analyst Roles
@@ -267,6 +275,9 @@ for i in range(5):
 plt.show()
 ```
 
+![](result/n3_1.png)
+
+
 ### Key Findings
 
 * SQL remains the most consistently demanded skill throughout the year, peaking mid-year before gradually declining toward Q4.
@@ -302,8 +313,6 @@ This notebook analyzes the relationship between skill demand and compensation fo
 * Visualized both dimensions side-by-side to contrast pay vs demand
 
 ```
-
-
 fig, ax = plt.subplots(2, 1)  
 
 # Top 10 Highest Paid Skills for Data Analysts
@@ -332,6 +341,10 @@ sns.set_theme(style='ticks')
 plt.tight_layout()
 plt.show()
 ```
+
+![](result/n4_1.png)
+
+
 ### Interpretation
 
 The results reveal a clear trade-off between demand and salary:
@@ -400,6 +413,10 @@ ax.xaxis.set_major_formatter(PercentFormatter(decimals=0))
 plt.tight_layout()
 plt.show()
 ```
+
+![](result/n5_1.png)
+
+
 ### Key Findings
 
 * SQL and Python stand out as the most optimal skills, combining high demand with strong median salaries, making them core requirements for Data Analysts.
