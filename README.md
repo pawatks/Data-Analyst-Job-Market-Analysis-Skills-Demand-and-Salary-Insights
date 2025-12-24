@@ -229,3 +229,203 @@ plt.show()
 ### Purpose of This Notebook
 
 This notebook highlights how skill demand differs significantly by role, reinforcing that a one-size-fits-all skill stack is ineffective in data careers. By expressing skill demand as percentages rather than raw counts, the analysis provides a clearer picture of which skills are core requirements versus role-specific differentiators.
+
+## Notebook 3 — Monthly Trends in Skill Demand for Data Analysts (U.S.)
+
+This notebook examines how demand for core Data Analyst skills changes over time, focusing on monthly trends across the U.S. job market in 2023. To enable meaningful comparison, skill counts are normalized by total monthly job postings and expressed as percentages, representing the likelihood of each skill appearing in a job posting.
+
+### Key Analyses Performed
+
+* Aggregated monthly Data Analyst job postings
+
+* Normalized skill counts into percentage-based metrics
+
+* Transformed month indices into readable month labels
+
+* Visualized monthly trends for the top five most requested skills
+
+* Annotated end-of-year values for interpretability
+
+```
+from matplotlib.ticker import PercentFormatter
+
+df_plot = df_DA_US_percent.iloc[:, :5]
+sns.lineplot(data=df_plot, dashes=False, legend='full', palette='tab10')
+sns.set_theme(style='ticks')
+sns.despine() # remove top and right spines
+
+plt.title('Trending Top Skills for Data Analysts in the US')
+plt.ylabel('Likelihood in Job Posting')
+plt.xlabel('2023')
+plt.legend().remove()
+plt.gca().yaxis.set_major_formatter(PercentFormatter(decimals=0))
+
+# annotate the plot with the top 5 skills using plt.text()
+for i in range(5):
+    plt.text(11.2, df_plot.iloc[-1, i], df_plot.columns[i], color='black')
+
+plt.show()
+```
+
+### Key Findings
+
+* SQL remains the most consistently demanded skill throughout the year, peaking mid-year before gradually declining toward Q4.
+
+* Excel shows moderate volatility, with noticeable increases in early and late parts of the year, indicating continued relevance in traditional analytics roles.
+
+* Python demonstrates steady demand with a mid-year peak, reinforcing its role as a complementary (rather than primary) skill for Data Analysts.
+
+* Tableau remains relatively stable but shows a slight downward trend in the second half of the year.
+
+* Power BI consistently ranks lowest among the top five skills, with modest fluctuations and limited seasonal growth.
+
+### Interpretation
+
+The results indicate that core analytical tools (SQL and Excel) remain foundational across the year, while programming and visualization tools exhibit more variability. This suggests that Data Analyst roles prioritize data querying and manipulation skills consistently, while demand for advanced tools may be influenced by hiring cycles, project needs, or organizational maturity.
+
+### Purpose of This Notebook
+
+This notebook adds a temporal dimension to the skill demand analysis, demonstrating that while certain skills dominate year-round, others fluctuate seasonally. These insights support strategic skill development by highlighting which competencies are stable requirements versus time-sensitive advantages.
+
+## Notebook 4 — Skill Payoff vs Market Demand for Data Analysts (U.S.)
+
+This notebook analyzes the relationship between skill demand and compensation for Data Analyst roles in the U.S. job market. By comparing the highest-paid skills against the most in-demand skills, the analysis highlights gaps between what employers frequently request and what commands premium salaries.
+
+### Key Analyses Performed
+
+* Calculated median salaries associated with individual skills for Data Analyst roles
+
+* Identified the top-paying skills based on median salary
+
+* Identified the most frequently requested skills based on job posting counts
+
+* Visualized both dimensions side-by-side to contrast pay vs demand
+
+```
+
+
+fig, ax = plt.subplots(2, 1)  
+
+# Top 10 Highest Paid Skills for Data Analysts
+sns.barplot(data=df_DA_top_pay, x='median', y=df_DA_top_pay.index, hue='median', ax=ax[0], palette='dark:b_r')
+ax[0].legend().remove()
+# original code:
+# df_DA_top_pay[::-1].plot(kind='barh', y='median', ax=ax[0], legend=False) 
+ax[0].set_title('Highest Paid Skills for Data Analysts in the US')
+ax[0].set_ylabel('')
+ax[0].set_xlabel('')
+ax[0].xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'${int(x/1000)}K'))
+
+
+# Top 10 Most In-Demand Skills for Data Analysts')
+sns.barplot(data=df_DA_skills, x='median', y=df_DA_skills.index, hue='median', ax=ax[1], palette='light:b')
+ax[1].legend().remove()
+# original code:
+# df_DA_skills[::-1].plot(kind='barh', y='median', ax=ax[1], legend=False)
+ax[1].set_title('Most In-Demand Skills for Data Analysts in the US')
+ax[1].set_ylabel('')
+ax[1].set_xlabel('Median Salary (USD)')
+ax[1].set_xlim(ax[0].get_xlim())  # Set the same x-axis limits as the first plot
+ax[1].xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'${int(x/1000)}K'))
+
+sns.set_theme(style='ticks')
+plt.tight_layout()
+plt.show()
+```
+### Interpretation
+
+The results reveal a clear trade-off between demand and salary:
+
+* High-demand skills tend to be foundational and widely expected, offering stability and accessibility.
+
+* High-paying skills are often niche, technical, and less frequently required, but provide significant salary upside.
+
+* Optimal career positioning likely lies at the intersection of core analytics skills (e.g., SQL, Python) and select high-value specializations.
+
+### Purpose of This Notebook
+
+This notebook supports strategic skill planning by demonstrating that maximizing compensation alone does not guarantee employability, and vice versa. Instead, it emphasizes the importance of building a balanced skill stack that combines market demand with high-value differentiation.
+
+## Notebook 5 — Optimal Skill Combinations for Data Analysts (U.S.)
+
+This notebook identifies the most optimal skills for Data Analysts by jointly evaluating market demand and median salary. Rather than focusing on demand or compensation in isolation, the analysis highlights skills that offer the best balance between employability and earning potential.
+
+### Key Analyses Performed
+
+* Combined skill demand percentages with median salary data
+
+* Plotted skills on a demand vs salary scatter plot
+
+* Categorized skills by technology group:
+
+ * Programming
+
+ * Analyst tools
+
+ * Cloud technologies
+
+* Labeled individual skills to improve interpretability
+
+```
+sns.scatterplot(
+    data=df_DA_skills_tech_high_demand,
+    x='skill_percent',
+    y='median_salary',
+    hue='technology'
+)
+
+sns.despine()
+sns.set_theme(style='ticks')
+
+# Prepare texts for adjustText
+texts = []
+for i, txt in enumerate(df_DA_skills_high_demand.index):
+    texts.append(plt.text(df_DA_skills_high_demand['skill_percent'].iloc[i], df_DA_skills_high_demand['median_salary'].iloc[i], txt))
+
+# Adjust text to avoid overlap
+adjust_text(texts, arrowprops=dict(arrowstyle='->', color='gray'))
+
+# Set axis labels, title, and legend
+plt.xlabel('Percent of Data Analyst Jobs')
+plt.ylabel('Median Yearly Salary')
+plt.title('Most Optimal Skills for Data Analysts in the US')
+plt.legend(title='Technology')
+
+from matplotlib.ticker import PercentFormatter
+ax = plt.gca()
+ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, pos: f'${int(y/1000)}K'))
+ax.xaxis.set_major_formatter(PercentFormatter(decimals=0))
+
+# Adjust layout and display plot 
+plt.tight_layout()
+plt.show()
+```
+### Key Findings
+
+* SQL and Python stand out as the most optimal skills, combining high demand with strong median salaries, making them core requirements for Data Analysts.
+
+* Tableau occupies a strong middle ground, offering solid demand with competitive compensation, particularly in business-facing roles.
+
+* Excel remains highly demanded but is associated with lower median salaries, reflecting its status as a baseline rather than a differentiating skill.
+
+* Cloud-related skills such as AWS and Oracle command high salaries despite lower demand, indicating niche but high-value opportunities.
+
+* Presentation tools (e.g., Word, PowerPoint) show lower salary outcomes and limited demand, reinforcing their role as supplementary rather than primary skills.
+
+### Interpretation
+
+The analysis demonstrates that optimal career positioning for Data Analysts lies at the intersection of:
+
+* High demand (ensuring job availability), and
+
+* High compensation (ensuring salary growth).
+
+Skills such as SQL and Python act as career anchors, while selective specialization in cloud or advanced analytics tools can provide salary upside without sacrificing employability.
+
+### Purpose of This Notebook
+This notebook serves as the capstone of the analysis by integrating skill demand and salary data to identify the most optimal skill combinations for Data Analysts in the U.S. job market. By evaluating skills at the intersection of employability and compensation, it provides practical guidance on which technical competencies offer the highest return on investment, supporting strategic skill development and informed career decision-making.
+
+## Author: Pawat Kusonchukul
+## Project: U.S. Data Analyst Job Market Analysis
+## Tools: Python, Pandas, Matplotlib, Seaborn, Jupyter Notebook
+## Data Source: Practical Data Science with Python (RMIT)
